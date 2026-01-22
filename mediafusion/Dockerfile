@@ -135,9 +135,12 @@ ENV PATH="/app/.venv/bin:/usr/local/bin:$PATH" \
 # Copy rootfs overlay
 COPY rootfs /
 
+# Copy run script
+COPY run.sh /run.sh
+
 # Make scripts executable
-RUN chmod +x /etc/cont-init.d/* 2>/dev/null || true \
-    && chmod +x /run.sh 2>/dev/null || true
+RUN chmod +x /etc/cont-init.d/* \
+    && chmod +x /run.sh
 
 WORKDIR /app/mediafusion
 
