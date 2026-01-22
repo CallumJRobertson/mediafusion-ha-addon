@@ -43,6 +43,8 @@ jobs:
         run: |
           VERSION=$(grep '^version:' mediafusion/config.yaml | sed 's/version: *"\?\([^"]*\)"\?/\1/')
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "owner_lc=${OWNER_LC}" >> $GITHUB_OUTPUT
 
       - name: Build and push amd64 image
         uses: docker/build-push-action@v5
@@ -52,8 +54,8 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/mediafusion-addon-amd64:${{ steps.version.outputs.version }}
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/mediafusion-addon-amd64:latest
+            ${{ env.REGISTRY }}/${{ steps.version.outputs.owner_lc }}/mediafusion-addon-amd64:${{ steps.version.outputs.version }}
+            ${{ env.REGISTRY }}/${{ steps.version.outputs.owner_lc }}/mediafusion-addon-amd64:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
