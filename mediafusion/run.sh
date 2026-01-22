@@ -1,12 +1,8 @@
-#!/bin/bash
+#!/usr/bin/with-contenv bashio
 # MediaFusion Home Assistant Add-on - Main Entry Point
 # ==============================================================================
 
 set -e
-
-# Source bashio library (required since init: false disables s6-overlay)
-# shellcheck source=/dev/null
-source /usr/lib/bashio/bashio.sh
 
 # ==============================================================================
 # Configuration Loading
@@ -151,7 +147,7 @@ setup_postgres() {
         mkdir -p "${POSTGRES_DATA_PATH}"
         chown -R postgres:postgres "${POSTGRES_DATA_PATH}"
 
-        su - postgres -c "initdb -D ${POSTGRES_DATA_PATH} --encoding=UTF8 --locale=C"
+        su -s /bin/sh postgres -c "initdb -D ${POSTGRES_DATA_PATH} --encoding=UTF8 --locale=C"
 
         # Configure PostgreSQL for limited resources (MacBook Air)
         cat >> "${POSTGRES_DATA_PATH}/postgresql.conf" << EOF
@@ -180,23 +176,23 @@ EOF
 
     # Start PostgreSQL
     chown -R postgres:postgres "${POSTGRES_DATA_PATH}" /run/postgresql
-    su - postgres -c "pg_ctl -D ${POSTGRES_DATA_PATH} -l /data/logs/postgres.log start"
+    su -s /bin/sh postgres -c "pg_ctl -D ${POSTGRES_DATA_PATH} -l /data/logs/postgres.log start"
 
     # Wait for PostgreSQL to be ready
     bashio::log.info "Waiting for PostgreSQL..."
     for i in $(seq 1 30); do
-        if su - postgres -c "pg_isready -q"; then
+        if su -s /bin/sh postgres -c "pg_isready -q"; then
             break
         fi
         sleep 1
     done
 
     # Create database and user if they don't exist
-    su - postgres -c "psql -tc \"SELECT 1 FROM pg_roles WHERE rolname='mediafusion'\" | grep -q 1" || \
-        su - postgres -c "createuser mediafusion"
+    su -s /bin/sh postgres -c "psql -tc \"SELECT 1 FROM pg_roles WHERE rolname='mediafusion'\" | grep -q 1" || \
+        su -s /bin/sh postgres -c "createuser mediafusion"
 
-    su - postgres -c "psql -tc \"SELECT 1 FROM pg_database WHERE datname='mediafusion'\" | grep -q 1" || \
-        su - postgres -c "createdb -O mediafusion mediafusion"
+    su -s /bin/sh postgres -c "psql -tc \"SELECT 1 FROM pg_database WHERE datname='mediafusion'\" | grep -q 1" || \
+        su -s /bin/sh postgres -c "createdb -O mediafusion mediafusion"
 
     bashio::log.info "PostgreSQL ready"
 }
@@ -269,9 +265,9 @@ health_check_loop() {
         sleep 60
 
         # Check PostgreSQL
-        if ! su - postgres -c "pg_isready -q" 2>/dev/null; then
+        if ! su -s /bin/sh postgres -c "pg_isready -q" 2>/dev/null; then
             bashio::log.error "PostgreSQL is down, attempting restart..."
-            su - postgres -c "pg_ctl -D ${POSTGRES_DATA_PATH} start" 2>/dev/null || true
+            su -s /bin/sh postgres -c "pg_ctl -D ${POSTGRES_DATA_PATH} start" 2>/dev/null || true
         fi
 
         # Check Redis
