@@ -12,7 +12,12 @@ RUN apk add --no-cache \
     python3-dev \
     musl-dev \
     linux-headers \
-    git
+    git \
+    libffi-dev \
+    curl-dev \
+    openssl-dev \
+    cargo \
+    rust
 
 RUN pip3 install --no-cache-dir uv
 
@@ -23,12 +28,15 @@ WORKDIR /app
 
 RUN git clone --depth 1 --branch ${COMET_REF} ${COMET_REPO} /app
 
-RUN if [ -f pyproject.toml ]; then \
-        uv sync; \
+RUN set -ex && \
+    if [ -f pyproject.toml ]; then \
+        echo "Found pyproject.toml, installing with uv sync..." && \
+        uv sync --no-dev || { echo "uv sync failed, trying pip fallback..."; pip3 install --no-cache-dir .; }; \
     elif [ -f requirements.txt ]; then \
+        echo "Found requirements.txt, installing with pip..." && \
         pip3 install --no-cache-dir -r requirements.txt; \
     else \
-        echo "No dependency manifest found; skipping install."; \
+        echo "ERROR: No dependency manifest found!" && exit 1; \
     fi
 
 COPY run.sh /run.sh
