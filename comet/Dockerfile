@@ -23,7 +23,13 @@ WORKDIR /app
 
 RUN git clone --depth 1 --branch ${COMET_REF} ${COMET_REPO} /app
 
-RUN uv sync
+RUN if [ -f pyproject.toml ]; then \
+        uv sync; \
+    elif [ -f requirements.txt ]; then \
+        pip3 install --no-cache-dir -r requirements.txt; \
+    else \
+        echo "No dependency manifest found; skipping install."; \
+    fi
 
 COPY run.sh /run.sh
 RUN chmod a+x /run.sh
