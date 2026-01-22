@@ -1,20 +1,30 @@
 {
   "name": "Comet",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "slug": "comet",
   "description": "Stremio torrent/debrid search add-on.",
   "url": "https://github.com/g0ldyy/comet",
   "startup": "services",
   "boot": "auto",
   "arch": [
-    "amd64"
+    "amd64",
+    "aarch64"
   ],
   "ports": {
     "8000/tcp": 8000
   },
-  "ports_description": {
-    "8000/tcp": "Comet API"
+  "options": {
+    "comet_api_key": "YOUR_API_KEY",
+    "debrid_service": "real-debrid",
+    "debrid_api_key": "YOUR_DEBRID_KEY",
+    "indexer_manager_url": "http://jackett:9117",
+    "indexer_manager_api_key": "YOUR_JACKETT_KEY"
   },
-  "options": {},
-  "schema": {}
+  "schema": {
+    "comet_api_key": "str",
+    "debrid_service": "list(real-debrid|alldebrid|premiumize|torbox|offcloud)",
+    "debrid_api_key": "str",
+    "indexer_manager_url": "str",
+    "indexer_manager_api_key": "str"
+  }
 }
