@@ -113,9 +113,8 @@ RUN mkdir -p \
     && chown -R mediafusion:mediafusion /app /data \
     && chown -R postgres:postgres /run/postgresql /var/lib/postgresql
 
-# Copy Python environment from builder
-COPY --from=builder /build/mediafusion/.venv /app/.venv 2>/dev/null || true
-COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages 2>/dev/null || true
+# Copy Python packages from builder (pip installs to site-packages)
+COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 
 # Copy MediaFusion application
 COPY --from=builder /build/mediafusion /app/mediafusion
