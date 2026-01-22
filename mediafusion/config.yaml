@@ -95,4 +95,4 @@ watchdog: "http://[HOST]:[PORT:8000]/health"
 
 # Security - no privileged access needed for debrid-only operation
 privileged: []
-apparmor: true
+apparmor: false
