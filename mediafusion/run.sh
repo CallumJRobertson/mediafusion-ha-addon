@@ -1,8 +1,12 @@
-#!/usr/bin/with-contenv bashio
+#!/bin/bash
 # MediaFusion Home Assistant Add-on - Main Entry Point
 # ==============================================================================
 
 set -e
+
+# Source bashio library (required since init: false disables s6-overlay)
+# shellcheck source=/dev/null
+source /usr/lib/bashio/bashio.sh
 
 # ==============================================================================
 # Configuration Loading
@@ -296,8 +300,17 @@ health_check_loop() {
 # ==============================================================================
 
 main() {
-    # Create log directory
+    # Create required directories (cont-init.d scripts don't run with init: false)
+    bashio::log.info "Creating data directories..."
+    mkdir -p /data/postgres
+    mkdir -p /data/redis
+    mkdir -p /data/cache
     mkdir -p /data/logs
+    mkdir -p /run/postgresql
+
+    # Set directory permissions
+    chown -R postgres:postgres /data/postgres /run/postgresql 2>/dev/null || true
+    chown -R mediafusion:mediafusion /data/cache /data/logs 2>/dev/null || true
 
     # Setup components
     setup_vpn || bashio::log.warning "VPN setup failed or not enabled"
