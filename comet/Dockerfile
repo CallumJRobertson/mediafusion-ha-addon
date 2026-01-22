@@ -16,12 +16,16 @@ RUN apk add --no-cache \
 
 RUN pip3 install --no-cache-dir uv
 
+ARG COMET_REPO=https://github.com/g0ldyy/comet
+ARG COMET_REF=main
+
 WORKDIR /app
 
-COPY pyproject.toml .
+RUN git clone --depth 1 --branch ${COMET_REF} ${COMET_REPO} /app
 
 RUN uv sync
 
-COPY . .
+COPY run.sh /run.sh
+RUN chmod a+x /run.sh
 
 CMD ["/run.sh"]
