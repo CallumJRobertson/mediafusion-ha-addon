@@ -1,0 +1,20 @@
+{
+  "name": "Comet",
+  "version": "0.1.0",
+  "slug": "comet",
+  "description": "Stremio torrent/debrid search add-on.",
+  "url": "https://github.com/g0ldyy/comet",
+  "startup": "services",
+  "boot": "auto",
+  "arch": [
+    "amd64"
+  ],
+  "ports": {
+    "8000/tcp": 8000
+  },
+  "ports_description": {
+    "8000/tcp": "Comet API"
+  },
+  "options": {},
+  "schema": {}
+}
