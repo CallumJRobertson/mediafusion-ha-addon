@@ -1,4 +1,4 @@
 #!/usr/bin/with-contenv bashio
 
 cd /app
-exec uv run python -m comet.main
+exec python3 -m comet.main
