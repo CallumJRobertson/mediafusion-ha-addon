@@ -1,12 +1,16 @@
-FROM node:22-alpine
+ARG BUILD_FROM=ghcr.io/hassio-addons/base:15.0.6
+FROM ${BUILD_FROM}
 
 RUN apk update && apk upgrade && \
-    apk add --no-cache git
+    apk add --no-cache git nodejs npm
 
-WORKDIR /home/node/app
+WORKDIR /app
 
 COPY package*.json ./
 RUN npm ci --only-production
 COPY . .
 
-CMD [ "node", "--insecure-http-parser", "index.js" ]
+COPY run.sh /run.sh
+RUN chmod +x /run.sh
+
+CMD [ "/run.sh" ]

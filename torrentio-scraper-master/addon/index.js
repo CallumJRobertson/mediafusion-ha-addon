@@ -6,6 +6,25 @@ import { initBestTrackers } from './lib/magnetHelper.js';
 
 const app = express();
 app.enable('trust proxy');
+const basicAuthUser = process.env.BASIC_AUTH_USER;
+const basicAuthPassword = process.env.BASIC_AUTH_PASSWORD;
+if (basicAuthUser && basicAuthPassword) {
+  app.use((req, res, next) => {
+    const header = req.headers.authorization || '';
+    const [scheme, encoded] = header.split(' ');
+    if (scheme !== 'Basic' || !encoded) {
+      res.set('WWW-Authenticate', 'Basic realm="Torrentio"');
+      return res.status(401).send('Authentication required');
+    }
+    const decoded = Buffer.from(encoded, 'base64').toString('utf8');
+    const [username, password] = decoded.split(':');
+    if (username !== basicAuthUser || password !== basicAuthPassword) {
+      res.set('WWW-Authenticate', 'Basic realm="Torrentio"');
+      return res.status(401).send('Invalid credentials');
+    }
+    return next();
+  });
+}
 app.use(swStats.getMiddleware({
   name: manifest().name,
   version: manifest().version,

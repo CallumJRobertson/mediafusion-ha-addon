@@ -1,0 +1,28 @@
+name: Torrentio Scraper
+version: "0.1.0"
+slug: torrentio-scraper-master
+description: Run the Torrentio scraper addon locally on Home Assistant OS.
+arch:
+  - amd64
+startup: services
+boot: auto
+ingress: true
+ingress_port: 7000
+panel_icon: mdi:cloud-download
+ports:
+  7000/tcp: 7000
+ports_description:
+  7000/tcp: Torrentio addon HTTP endpoint
+webui: http://[HOST]:[PORT:7000]/
+options:
+  port: 7000
+  metrics_user: ""
+  metrics_password: ""
+  basic_auth_user: ""
+  basic_auth_password: ""
+schema:
+  port: port
+  metrics_user: str?
+  metrics_password: str?
+  basic_auth_user: str?
+  basic_auth_password: str?
