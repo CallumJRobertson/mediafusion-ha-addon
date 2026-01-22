@@ -1,0 +1,14 @@
+# Build configuration for MediaFusion add-on
+build_from:
+  amd64: "ghcr.io/home-assistant/amd64-base-python:3.12-alpine3.20"
+
+args:
+  MEDIAFUSION_VERSION: "4.3.35"
+
+labels:
+  org.opencontainers.image.title: "MediaFusion for Home Assistant"
+  org.opencontainers.image.description: "Self-hosted Stremio addon for streaming via debrid services"
+  org.opencontainers.image.source: "https://github.com/mhdzumair/MediaFusion"
+  org.opencontainers.image.licenses: "MIT"
+  io.hass.type: "addon"
+  io.hass.arch: "amd64"

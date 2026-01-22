@@ -1,0 +1,61 @@
+configuration:
+  host_url:
+    name: Host URL
+    description: External URL for accessing MediaFusion (e.g., https://mediafusion.yourdomain.com)
+  secret_key:
+    name: Secret Key
+    description: Encryption key for user data. Leave empty for auto-generation (not recommended for production).
+  api_password:
+    name: API Password
+    description: Password to protect the MediaFusion configuration interface.
+  enable_vpn:
+    name: Enable VPN
+    description: Route MediaFusion traffic through WireGuard VPN.
+  vpn_config_path:
+    name: VPN Config Path
+    description: Path to WireGuard configuration file (alternative to manual configuration).
+  wireguard_endpoint:
+    name: WireGuard Endpoint
+    description: VPN server endpoint (e.g., vpn.example.com:51820).
+  wireguard_private_key:
+    name: WireGuard Private Key
+    description: Your WireGuard private key.
+  wireguard_public_key:
+    name: WireGuard Public Key
+    description: VPN server's public key.
+  wireguard_address:
+    name: WireGuard Address
+    description: Your assigned VPN IP address (e.g., 10.0.0.2/32).
+  wireguard_dns:
+    name: WireGuard DNS
+    description: DNS server to use when VPN is connected.
+  vpn_kill_switch:
+    name: VPN Kill Switch
+    description: Block all internet traffic if VPN disconnects (fail-closed behavior).
+  log_level:
+    name: Log Level
+    description: Logging verbosity level.
+  enable_torrentio_scraping:
+    name: Enable Torrentio Scraping
+    description: Scrape torrent sources from Torrentio.
+  enable_zilean_scraping:
+    name: Enable Zilean Scraping
+    description: Scrape cached debrid content from Zilean DMM.
+  enable_mediafusion_scraping:
+    name: Enable MediaFusion Scraping
+    description: Scrape sources from other MediaFusion instances.
+  cache_ttl_minutes:
+    name: Cache TTL (Minutes)
+    description: How long to cache search results (1-60 minutes).
+  prowlarr_url:
+    name: Prowlarr URL
+    description: URL of your Prowlarr instance (optional).
+  prowlarr_api_key:
+    name: Prowlarr API Key
+    description: API key for Prowlarr integration (optional).
+  postgres_data_path:
+    name: PostgreSQL Data Path
+    description: Path for PostgreSQL database storage.
+  redis_data_path:
+    name: Redis Data Path
+    description: Path for Redis cache storage.

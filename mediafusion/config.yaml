@@ -1,0 +1,98 @@
+# MediaFusion Add-on for Home Assistant
+# https://github.com/mhdzumair/MediaFusion
+
+name: "MediaFusion"
+description: "Self-hosted Stremio addon for streaming movies and TV shows via debrid services"
+version: "1.0.0"
+slug: "mediafusion"
+url: "https://github.com/mhdzumair/MediaFusion"
+arch:
+  - amd64
+init: false
+homeassistant_api: false
+host_network: false
+hassio_api: false
+
+# Ports - MediaFusion runs on 8000
+ports:
+  8000/tcp: 8000
+ports_description:
+  8000/tcp: "MediaFusion Web UI & API"
+
+# Resource management for MacBook Air
+resources:
+  memory: 1024
+  cpu_percent: 50
+
+# Persistent storage mapping
+map:
+  - data:rw
+  - ssl:ro
+
+# Environment variables exposed as options
+options:
+  host_url: "http://homeassistant.local:8000"
+  secret_key: ""
+  api_password: ""
+  enable_vpn: false
+  vpn_config_path: ""
+  wireguard_endpoint: ""
+  wireguard_private_key: ""
+  wireguard_public_key: ""
+  wireguard_address: ""
+  wireguard_dns: "1.1.1.1"
+  vpn_kill_switch: true
+  log_level: "INFO"
+  enable_torrentio_scraping: true
+  enable_zilean_scraping: true
+  enable_mediafusion_scraping: true
+  cache_ttl_minutes: 5
+  prowlarr_url: ""
+  prowlarr_api_key: ""
+  postgres_data_path: "/data/postgres"
+  redis_data_path: "/data/redis"
+
+schema:
+  host_url: str
+  secret_key: str?
+  api_password: str?
+  enable_vpn: bool
+  vpn_config_path: str?
+  wireguard_endpoint: str?
+  wireguard_private_key: str?
+  wireguard_public_key: str?
+  wireguard_address: str?
+  wireguard_dns: str?
+  vpn_kill_switch: bool
+  log_level: list(DEBUG|INFO|WARNING|ERROR)
+  enable_torrentio_scraping: bool
+  enable_zilean_scraping: bool
+  enable_mediafusion_scraping: bool
+  cache_ttl_minutes: int(1,60)
+  prowlarr_url: str?
+  prowlarr_api_key: str?
+  postgres_data_path: str
+  redis_data_path: str
+
+# Startup configuration
+startup: application
+boot: auto
+ingress: true
+ingress_port: 8000
+ingress_stream: true
+panel_icon: "mdi:movie-open"
+panel_title: "MediaFusion"
+
+# Labels for identification
+image: "ghcr.io/{arch}-addon-mediafusion"
+
+# Build configuration
+build_from:
+  amd64: "ghcr.io/home-assistant/amd64-base-python:3.12-alpine3.20"
+
+# Watchdog for health monitoring
+watchdog: "http://[HOST]:[PORT:8000]/health"
+
+# Security - no privileged access needed for debrid-only operation
+privileged: []
+apparmor: true
