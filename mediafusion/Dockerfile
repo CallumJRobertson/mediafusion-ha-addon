@@ -140,7 +140,8 @@ COPY run.sh /run.sh
 
 # Make scripts executable
 RUN chmod +x /etc/cont-init.d/* \
-    && chmod +x /run.sh
+    && chmod +x /run.sh \
+    && chmod +x /init
 
 WORKDIR /app/mediafusion
 

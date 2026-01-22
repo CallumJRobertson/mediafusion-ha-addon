@@ -3,6 +3,10 @@
 profile mediafusion flags=(attach_disconnected,mediate_deleted) {
   #include <abstractions/base>
 
+  # Allow S6 Init and Run script
+  /init rix,
+  /run.sh rix,
+
   # Allow network access
   network inet stream,
   network inet6 stream,
